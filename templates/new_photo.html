@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Uusi kuva</title>
+</head>
+
+<body>
+     <h1>Lisää uusi kuva</h1>
+  <form action="/create_photo" method="post">
+    <p>
+      <label for="seasons">Valitse vuodenaika:</label>
+
+        <select id="seasons" name="seasons">
+            <option value="spring">Kevät</option>
+            <option value="summer">Kesä</option>
+            <option value="autumn">Syksy</option>
+            <option value="winter">talvi</option>
+        </select>
+
+        <label for="era">Valitse aikakausi:</label>
+
+        <select id="era" name="era">
+            <option value="2020">2020</option>
+            <option value="2010">2010</option>
+            <option value="2000">2000</option> 
+            <option value="1990">1990</option>
+            <option value="1980">1980</option>
+            <option value="1970">1970</option>
+            <option value="1960">1960</option>           
+        </select>luku
+    </p>
+    <p>
+        Kuvaus: <br />
+        <textarea name="description" cols = "60"></textarea>
+    </p>
+    <input type="submit" value="Lähetä kuva" />
+  </form>
+</body>
+
+</html>
+  
