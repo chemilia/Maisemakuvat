@@ -22,6 +22,13 @@
   <p>
     <a href="/new_photo">Uusi kuva</a>
   </p>
+
+  <h2>Kuvat</h2>
+  <ul>
+    {% for photo in photos %}
+    <li> <a href="/photo/{{photo.id}}"> {{photo.description}}</li>
+    {% endfor %}
+  </ul>
 </body>
 
 </html>

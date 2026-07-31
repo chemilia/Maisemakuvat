@@ -8,7 +8,7 @@ CREATE TABLE photos (
     id INTEGER PRIMARY KEY, 
     seasons TEXT, 
     era INTEGER,
-    description TEXT, 
-    scenery TEXT, 
+    description TEXT,
+    scenery BLOB, 
     user_id INTEGER REFERENCE users
 );

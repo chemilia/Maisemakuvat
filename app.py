@@ -4,14 +4,21 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-import photo
+import photos
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-	return render_template("index.html")
+    all_photos = photos.get_photos()
+    return render_template("index.html",photos = all_photos)
+
+@app.route("/photo/<int:photo_id>")
+def show_photo(photo_id):
+    photo = photos.get_photo(photo_id)
+    return render_template("show_photo.html", photo = photo)
+
 
 @app.route("/new_photo")
 def new_photo():
@@ -22,10 +29,10 @@ def create_photo():
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
-    scenery = request.form["scenery"]
+    #scenery = request.form["scenery"]
     user_id = session["user_id"]
 
-    photo.add_photo(seasons,era, description, scenery, user_id)
+    photos.add_photo(seasons,era, description, user_id)
 
     return redirect("/")
 
