@@ -9,5 +9,6 @@ CREATE TABLE photos (
     seasons TEXT, 
     era INTEGER,
     description TEXT, 
-    user_id INTEGER REFERENCE users, 
+    scenery TEXT, 
+    user_id INTEGER REFERENCE users
 );

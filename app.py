@@ -4,6 +4,7 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
+import photo
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -21,10 +22,10 @@ def create_photo():
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
+    scenery = request.form["scenery"]
     user_id = session["user_id"]
 
-    sql = "INSERT INTO photos (seasons, era, description, user_id) VALUES (?, ?, ?, ?)"
-    db.execute(sql, [seasons, era, description, user_id])
+    photo.add_photo(seasons,era, description, scenery, user_id)
 
     return redirect("/")
 
