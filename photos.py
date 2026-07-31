@@ -9,5 +9,20 @@ def get_photos():
     return db.query(sql)
 
 def get_photo(photo_id):
-    sql = "SELECT photos.seasons, photos.era, photos.description, users.username FROM users, photos WHERE photos.user_id = users.id AND photos.id = ?"
+    sql = """SELECT photos.id,
+                    photos.seasons,
+                    photos.era,
+                    photos.description,
+                    users.id user_id,
+                    users.username
+                FROM users, photos
+                WHERE photos.user_id = users.id AND photos.id = ?"""
     return db.query(sql, [photo_id])[0]
+
+def update_photo(photo_id, seasons,era, description):
+    sql = """UPDATE photos SET seasons = ?,
+                                era = ?,
+                                description = ?
+                            WHERE id = ?"""
+
+    db.execute(sql, [seasons, era, description, photo_id])

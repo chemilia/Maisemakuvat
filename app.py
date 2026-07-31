@@ -36,6 +36,23 @@ def create_photo():
 
     return redirect("/")
 
+@app.route("/edit_photo/<int:photo_id>")
+def edit_photo(photo_id):
+    photo = photos.get_photo(photo_id)
+    return render_template("edit_photo.html", photo = photo)
+
+@app.route("/update_photo", methods=["POST"])
+def update_photo():
+    photo_id = request.form["photo_id"]
+    seasons = request.form["seasons"]
+    era = request.form["era"]
+    description = request.form["description"]
+    #scenery = request.form["scenery"]
+
+    photos.update_photo(photo_id, seasons, era, description)
+    return redirect("/photo/" + str(photo_id))
+
+
 @app.route("/register")
 def register():
     return render_template("register.html")

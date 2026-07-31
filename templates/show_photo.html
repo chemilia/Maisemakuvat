@@ -7,6 +7,12 @@
 
 <body>
     <h1>{{photo.description}}</h1>
+    {% if session.user_id ==  photo.user_id %}
+    <p>
+        <a href="/edit_photo/{{photo.id}}">Muokkaa kuvan tiedot</a>
+    </p>
+
+    {% endif %}
     <p> 
         Kuva on otettu: {{photo.seasons}}, {{photo.era}} luvulla
     </p>
