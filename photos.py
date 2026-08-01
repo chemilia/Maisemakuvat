@@ -30,3 +30,10 @@ def update_photo(photo_id, seasons,era, description):
 def remove_photo(photo_id):
     sql = "DELETE FROM photos WHERE id = ?"
     db.execute(sql, [photo_id])
+
+def find_photo(query):
+    sql = """SELECT id, description
+                FROM photos
+                WHERE description LIKE ?
+                ORDER BY id DESC"""
+    return db.query(sql, ["%" + query + "%"])

@@ -14,6 +14,17 @@ def index():
     all_photos = photos.get_photos()
     return render_template("index.html",photos = all_photos)
 
+@app.route("/find_photo")
+def find_photo():
+    query = request.args.get("query")
+    print(query)
+    if query:
+        results = photos.find_photo(query)
+    else:
+        query = ""
+        results = []
+    return render_template("find_photo.html", query=query, results = results)
+
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
     photo = photos.get_photo(photo_id)

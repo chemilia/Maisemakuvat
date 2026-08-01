@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>index</title>
+  <title>Maisemakuvat</title>
 </head>
 
 <body>
@@ -21,12 +21,14 @@
 
   <p>
     <a href="/new_photo">Uusi kuva</a>
+    <a href="/find_photo">Etsi kuva</a>
+
   </p>
 
   <h2>Kuvat</h2>
   <ul>
     {% for photo in photos %}
-    <li> <a href="/photo/{{photo.id}}"> {{photo.description}}</li>
+    <li> <a href="/photo/{{photo.id}}"> {{photo.description}} </a> </li>
     {% endfor %}
   </ul>
 </body>

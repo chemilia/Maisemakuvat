@@ -1,0 +1,32 @@
+<html>
+
+<head>
+  <title>Etsi kuva</title>
+</head>
+
+<body>
+    <h1>Esti kuva</h1>
+
+    <form action="/find_photo" method="get">
+        <p>
+            Hakusana: <input type="text" name="query" value="{{ query }}">
+        </p>
+        <input type="submit" value="Lähetä">
+    </form>
+
+    <p>
+        <a href="/">Takaisin</a>
+    </p>
+    
+    {% if query %}
+    <h2>Tulokset</h2>
+    <ul>
+        {% for photo in results %}
+        <li> <a href="/photo/{{photo.id}}"> {{photo.description}}</a> </li>
+        {% endfor %}
+    </ul>
+
+    {% endif %}
+</body>
+
+</html>
