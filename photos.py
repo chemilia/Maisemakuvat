@@ -26,3 +26,7 @@ def update_photo(photo_id, seasons,era, description):
                             WHERE id = ?"""
 
     db.execute(sql, [seasons, era, description, photo_id])
+
+def remove_photo(photo_id):
+    sql = "DELETE FROM photos WHERE id = ?"
+    db.execute(sql, [photo_id])

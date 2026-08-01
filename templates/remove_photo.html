@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Kuvan poisto</title>
+</head>
+
+<body>
+     <h1>Kuvan poisto</h1>
+     <p>Kuva: {{photo.description}}</p>
+     <p>Haluatko varmasti poistaa tämän kuvan?</p>
+  <form action="/remove_photo/{{photo.id}}" method="post">
+        <input type="submit" name="remove" value="Posta kuva">
+        <input type="submit" name="back" value="Palaa Takaisin">
+  </form>
+</body>
+
+</html>
+  

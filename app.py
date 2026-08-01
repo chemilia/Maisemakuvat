@@ -52,6 +52,19 @@ def update_photo():
     photos.update_photo(photo_id, seasons, era, description)
     return redirect("/photo/" + str(photo_id))
 
+@app.route("/remove_photo/<int:photo_id>" , methods=["GET", "POST"])
+def remove_photo(photo_id):
+    if request.method =="GET":
+        photo = photos.get_photo(photo_id)
+        return render_template("remove_photo.html", photo = photo)
+
+    if request.method == "POST":
+        if "remove" in request.form:
+            photos.remove_photo(photo_id)
+            return redirect("/")
+        else:
+            return redirect("/photo/" + str(photo_id))
+
 
 @app.route("/register")
 def register():

@@ -10,6 +10,7 @@
     {% if session.user_id ==  photo.user_id %}
     <p>
         <a href="/edit_photo/{{photo.id}}">Muokkaa kuvan tiedot</a>
+        <a href="/remove_photo/{{photo.id}}">Poista</a>
     </p>
 
     {% endif %}
