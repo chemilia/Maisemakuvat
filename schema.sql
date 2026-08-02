@@ -10,5 +10,6 @@ CREATE TABLE photos (
     era INTEGER,
     description TEXT,
     scenery BLOB,
-    user_id INTEGER REFERENCE users
+    user_id INTEGER REFERENCE users,
+    mime_type TEXT
 );

@@ -7,7 +7,12 @@
 
 <body>
      <h1>Lisää uusi kuva</h1>
-  <form action="/create_photo" method="post">
+  <form action="/create_photo" method="post" enctype="multipart/form-data">
+    <p>
+      Valitsu kuva:
+      <input type="file" name="scenery" accpet="image/*">
+    </p>
+
     <p>
       <label for="seasons">Valitse vuodenaika:</label>
 

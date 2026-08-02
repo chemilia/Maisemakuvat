@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
@@ -30,6 +30,10 @@ def show_photo(photo_id):
     photo = photos.get_photo(photo_id)
     return render_template("show_photo.html", photo = photo)
 
+@app.route("/image/<int:photo_id>")
+def image(photo_id):
+    image = photos.get_image(photo_id)
+    return Response(image["scenery"], mimetype=image["mime_type"])
 
 @app.route("/new_photo")
 def new_photo():
@@ -40,10 +44,16 @@ def create_photo():
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
-    #scenery = request.form["scenery"]
+
+    image = request.files["scenery"]
+    if image.filename == "":
+        return "Et valinnut kuvaa"
+    scenery = image.read()
+    mime_type = image.mimetype
+
     user_id = session["user_id"]
 
-    photos.add_photo(seasons,era, description, user_id)
+    photos.add_photo(seasons, era, description, scenery, user_id, mime_type)
 
     return redirect("/")
 
@@ -58,7 +68,7 @@ def update_photo():
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
-    #scenery = request.form["scenery"]
+    #scenery = request.files["scenery"].read()
 
     photos.update_photo(photo_id, seasons, era, description)
     return redirect("/photo/" + str(photo_id))

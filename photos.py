@@ -1,8 +1,8 @@
 import db
 
-def add_photo(seasons, era, description, user_id):
-    sql = "INSERT INTO photos (seasons, era, description,user_id) VALUES (?, ?, ?, ?)"
-    db.execute(sql, [seasons, era, description, user_id])
+def add_photo(seasons, era, description, scenery, user_id, mime_type):
+    sql = "INSERT INTO photos (seasons, era, description, scenery, user_id, mime_type) VALUES (?, ?, ?, ?, ?, ?)"
+    db.execute(sql, [seasons, era, description, scenery, user_id, mime_type])
 
 def get_photos():
     sql = "SELECT id, description FROM photos ORDER BY id DESC"
@@ -13,6 +13,7 @@ def get_photo(photo_id):
                     photos.seasons,
                     photos.era,
                     photos.description,
+                    photos.scenery,
                     users.id user_id,
                     users.username
                 FROM users, photos
@@ -37,3 +38,8 @@ def find_photo(query):
                 WHERE description LIKE ?
                 ORDER BY id DESC"""
     return db.query(sql, ["%" + query + "%"])
+
+def get_image(photo_id):
+    sql = "SELECT scenery, mime_type FROM photos WHERE id = ?"
+
+    return db.query(sql, [photo_id])[0]
