@@ -1,4 +1,5 @@
 # Maisemakuvat
+## Sovelluksen toiminnot:
 - Sovelluksessa käyttäjät pystyvät jakaa omia ottamia kuvia erilaisista maisemista ja kirjoittaa kuvauksia niista, esimerkiksi mikä vuori on kuvassa tai milloin kuvä on otettu.
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 - Käyttäjä pystyy lisäämään kuvia, kuvauksia, ja muokkaamaan ja poistamaan niitä.
@@ -11,3 +12,18 @@
 - Käyttäjä pystyy antaa kuville kommentin ja tykkäyksiä. Kuvien alla näkyy komentit ja kuinka monta tykkäystä on saanut kaikilta käyttäjiltä.
 
 Tässä pääasiallinen tietokohde on kuvat ja toisssijainen tietokohde on kommentti kuviin. 
+
+## Sovelluksen asennus:
+Asenna ```flask```-kirjaston:
+
+```$ pip install flask```
+
+
+Luo tietokannan taulut ja lisää alkutiedot:
+
+```$ sqlite3 database.db < schema.sql```
+
+
+Voit käynnistää sovelluksen näin:
+
+```$ flask run```
