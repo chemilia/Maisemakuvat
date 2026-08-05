@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>{{photo.description}}</title>
-</head>
-
-<body>
+{% block content %}
     <h1>{{photo.description}}</h1>
     {% if session.user_id ==  photo.user_id %}
     <p>
@@ -27,7 +22,5 @@
         <a href="/">Takaisin</a>
     </p>
     
-    </body>
 
-</html>
-  
+{% endblock %}

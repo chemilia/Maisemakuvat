@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Uusi kuva</title>
-</head>
-
-<body>
+{% block content %}
      <h1>Lisää uusi kuva</h1>
   <form action="/create_photo" method="post" enctype="multipart/form-data">
     <p>
@@ -42,7 +37,6 @@
     </p>
     <input type="submit" value="Lähetä kuva" />
   </form>
-</body>
 
-</html>
+{% endblock %}
   

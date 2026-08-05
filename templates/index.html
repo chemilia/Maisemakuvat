@@ -1,29 +1,11 @@
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Maisemakuvat</title>
-</head>
-
-<body>
-    <h1>Maisemakuvat</h1>
+{% block content %}
   {% if session.username %}
   <p>
-    Olet kirjautunut nimellä {{ session.username }},id-numerosi on {{session.user_id}}
+    Hei, {{ session.username }}! Tervetuloa maisema-galleriaan!
   </p>
-
   {% endif %}
-
-  <p>
-    <a href="/login">Kirjaudu sisään</a>
-    <a href="/register">Luo tunnus</a>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
-
-  <p>
-    <a href="/new_photo">Uusi kuva</a>
-    <a href="/find_photo">Etsi kuva</a>
-
-  </p>
 
   <h2>Kuvat</h2>
   <ul>
@@ -31,6 +13,5 @@
     <li> <a href="/photo/{{photo.id}}"> {{photo.description}} </a> </li>
     {% endfor %}
   </ul>
-</body>
 
-</html>
+{% endblock %}

@@ -1,10 +1,7 @@
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Etsi kuva</title>
-</head>
+{% block content %}
 
-<body>
     <h1>Esti kuva</h1>
 
     <form action="/find_photo" method="get">
@@ -27,6 +24,5 @@
     </ul>
 
     {% endif %}
-</body>
 
-</html>
+{% endblock %}

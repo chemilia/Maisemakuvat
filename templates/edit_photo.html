@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Kuvan tiedon muokkaaminen</title>
-</head>
+{% block content %}
 
-<body>
      <h1>Kuvan tiedon muokkaaminen</h1>
   <form action="/update_photo" method="post">
     <p>
@@ -81,7 +77,6 @@
     <input type="hidden" name="photo_id" value="{{photo.id}}" />
     <input type="submit" value="Päivitä tiedot" />
   </form>
-</body>
 
-</html>
+{% endblock %}
   

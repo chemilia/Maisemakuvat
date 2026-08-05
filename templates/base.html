@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Maisemakuvat</title>
+</head>
+
+<body>
+
+<h1><a href="/">Maisemakuvat</a></h1>
+
+<nav>
+    <a href="/">Etusivu</a>
+
+    {% if session.user_id %}
+        |
+        <a href="/new_photo">Lisää kuva</a>
+        |
+        <a href="/find_photo">Hae</a>
+        |
+        <a href="/logout">Kirjaudu ulos</a>
+    {% else %}
+        |
+        <a href="/login">Kirjaudu</a>
+        |
+        <a href="/register">Rekisteröidy</a>
+    {% endif %}
+</nav>
+
+<hr>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
