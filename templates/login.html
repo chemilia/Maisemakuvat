@@ -9,6 +9,9 @@
     <a href="/logout">Kirjaudu ulos</a>
   </p>
   {% else %}
+  {% if error %}
+  <p style="color:red">{{ error }}</p>
+  {% endif %}
   <form action="/login" method="post">
     <p>
       Tunnus: <br />

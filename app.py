@@ -96,8 +96,13 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+    if not username:
+        return render_template("register.html",error="VIRHE: Anna käyttäjätunnus.")
+    if not password1:
+            return render_template("register.html",error="VIRHE: Anna salasana.")
+    
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
+        return render_template("register.html",error="VIRHE: salasanat eivät täsmää.")
     password_hash = generate_password_hash(password1)
 
     try:
@@ -107,7 +112,6 @@ def create():
         return "VIRHE: tunnus on jo varattu"
 
     return "Tunnus luotu"
-
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -128,7 +132,7 @@ def login():
             session["username"] = username
             return redirect("/")
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            return render_template("login.html",error="VIRHE: Käyttäjätunnus tai salasana on väärin.")
 
 @app.route("/logout")
 def logout():

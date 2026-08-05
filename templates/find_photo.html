@@ -6,14 +6,10 @@
 
     <form action="/find_photo" method="get">
         <p>
-            Hakusana: <input type="text" name="query" value="{{ query }}">
+            Hakusana: <input type="text" name="query" value="{{ query }}" required>
         </p>
         <input type="submit" value="Lähetä">
     </form>
-
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
     
     {% if query %}
     <h2>Tulokset</h2>

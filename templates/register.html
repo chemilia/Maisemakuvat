@@ -2,6 +2,9 @@
 
 {% block content %}
   <form action="/create" method="post">
+    {% if error %}
+    <p style="color:red">{{ error }}</p>
+    {% endif %}
     <p>
       Tunnus: <br />
       <input type="text" name="username" />
