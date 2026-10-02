@@ -31,6 +31,8 @@ def find_photo():
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
     photo = photos.get_photo(photo_id)
+    if not photo:
+            abort(404)
     return render_template("show_photo.html", photo = photo)
 
 @app.route("/image/<int:photo_id>")
@@ -71,6 +73,8 @@ def create_photo():
 @app.route("/edit_photo/<int:photo_id>")
 def edit_photo(photo_id):
     photo = photos.get_photo(photo_id)
+    if not photo:
+            abort(404)
     if photo["user_id"] != session["user_id"]:
         abort(403)
     return render_template("edit_photo.html", photo = photo)
@@ -79,6 +83,8 @@ def edit_photo(photo_id):
 def update_photo():
     photo_id = request.form["photo_id"]
     photo = photos.get_photo(photo_id)
+    if not photo:
+            abort(404)
     if photo["user_id"] != session["user_id"]:
         abort(403)
     seasons = request.form["seasons"]
@@ -92,7 +98,8 @@ def update_photo():
 @app.route("/remove_photo/<int:photo_id>" , methods=["GET", "POST"])
 def remove_photo(photo_id):
     photo = photos.get_photo(photo_id)
-
+    if not photo:
+            abort(404)
     if photo["user_id"] != session["user_id"]:
         abort(403)
 

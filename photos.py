@@ -18,7 +18,8 @@ def get_photo(photo_id):
                     users.username
                 FROM users, photos
                 WHERE photos.user_id = users.id AND photos.id = ?"""
-    return db.query(sql, [photo_id])[0]
+    result= db.query(sql, [photo_id])
+    return result[0] if result else None
 
 def update_photo(photo_id, seasons,era, description):
     sql = """UPDATE photos SET seasons = ?,
