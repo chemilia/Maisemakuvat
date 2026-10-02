@@ -4,10 +4,12 @@
      <h1>Lisää uusi kuva</h1>
   <form action="/create_photo" method="post" enctype="multipart/form-data">
     <p>
-      Valitsu kuva:
-      <input type="file" name="scenery" accpet="image/*">
+      Valitse kuva:
+      <input type="file" name="scenery" accpet="image/png,image/jpeg">
     </p>
-
+    {% if error %}
+    <p style="color:red">{{ error }}</p>
+    {% endif %}
     <p>
       <label for="seasons">Valitse vuodenaika:</label>
 
@@ -33,7 +35,7 @@
     </p>
     <p>
         Kuvaus: <br />
-        <textarea name="description" cols = "60" required></textarea>
+        <textarea name="description" cols = "60" required maxlength = "200"></textarea>
     </p>
     <input type="submit" value="Lähetä kuva" />
   </form>

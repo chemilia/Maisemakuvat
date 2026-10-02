@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session, Response
+from flask import redirect, render_template, request, session, Response, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
@@ -20,6 +20,9 @@ def find_photo():
     print(query)
     if query:
         results = photos.find_photo(query)
+
+        if not results:
+            return render_template( "find_photo.html",query=query,results=[],error="Hakusanalla ei löytynyt kuvia. Kokeile toista hakusanaa.")
     else:
         query = ""
         results = []
@@ -48,7 +51,15 @@ def create_photo():
     image = request.files["scenery"]
     if image.filename == "":
         return "Et valinnut kuvaa"
+
+    if image.mimetype not in ["image/png", "image/jpeg"]:
+        return render_template("new_photo.html",error="VIRHE: kuvan pitää olla PNG- tai JPG-kuva")
+
     scenery = image.read()
+
+    if len(scenery) > 5* 1024 * 1024:
+        return render_template("new_photo.html",error="VIRHE: kuvan maksimikoko on 5 MB")
+        
     mime_type = image.mimetype
 
     user_id = session["user_id"]
@@ -60,11 +71,16 @@ def create_photo():
 @app.route("/edit_photo/<int:photo_id>")
 def edit_photo(photo_id):
     photo = photos.get_photo(photo_id)
+    if photo["user_id"] != session["user_id"]:
+        abort(403)
     return render_template("edit_photo.html", photo = photo)
 
 @app.route("/update_photo", methods=["POST"])
 def update_photo():
     photo_id = request.form["photo_id"]
+    photo = photos.get_photo(photo_id)
+    if photo["user_id"] != session["user_id"]:
+        abort(403)
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
@@ -75,8 +91,12 @@ def update_photo():
 
 @app.route("/remove_photo/<int:photo_id>" , methods=["GET", "POST"])
 def remove_photo(photo_id):
+    photo = photos.get_photo(photo_id)
+
+    if photo["user_id"] != session["user_id"]:
+        abort(403)
+
     if request.method =="GET":
-        photo = photos.get_photo(photo_id)
         return render_template("remove_photo.html", photo = photo)
 
     if request.method == "POST":
@@ -99,7 +119,7 @@ def create():
     if not username:
         return render_template("register.html",error="VIRHE: Anna käyttäjätunnus.")
     if not password1:
-            return render_template("register.html",error="VIRHE: Anna salasana.")
+        return render_template("register.html",error="VIRHE: Anna salasana.")
     
     if password1 != password2:
         return render_template("register.html",error="VIRHE: salasanat eivät täsmää.")
@@ -123,9 +143,13 @@ def login():
         password = request.form["password"]
 
         sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
-        user_id = result ["id"]
-        password_hash = result["password_hash"]
+        result = db.query(sql, [username])
+
+        if not result:
+            return render_template("login.html",error="VIRHE: Käyttäjätunnusta ei löydy.")
+
+        user_id = result[0]["id"]
+        password_hash = result[0]["password_hash"]
 
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
