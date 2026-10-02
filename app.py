@@ -9,6 +9,10 @@ import photos
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
 @app.route("/")
 def index():
     all_photos = photos.get_photos()
@@ -42,10 +46,13 @@ def image(photo_id):
 
 @app.route("/new_photo")
 def new_photo():
-	return render_template("new_photo.html")
+    require_login()
+    return render_template("new_photo.html")
 
 @app.route("/create_photo", methods=["POST"])
 def create_photo():
+    require_login()
+
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
@@ -72,6 +79,8 @@ def create_photo():
 
 @app.route("/edit_photo/<int:photo_id>")
 def edit_photo(photo_id):
+    require_login()
+
     photo = photos.get_photo(photo_id)
     if not photo:
             abort(404)
@@ -81,6 +90,8 @@ def edit_photo(photo_id):
 
 @app.route("/update_photo", methods=["POST"])
 def update_photo():
+    require_login()
+
     photo_id = request.form["photo_id"]
     photo = photos.get_photo(photo_id)
     if not photo:
@@ -97,6 +108,8 @@ def update_photo():
 
 @app.route("/remove_photo/<int:photo_id>" , methods=["GET", "POST"])
 def remove_photo(photo_id):
+    require_login()
+
     photo = photos.get_photo(photo_id)
     if not photo:
             abort(404)
@@ -167,6 +180,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["user_id"]
-    del session["username"]
+    if "user_id" in session:
+        del session["user_id"]
+        del session["username"]
     return redirect("/")
