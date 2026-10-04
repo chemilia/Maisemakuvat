@@ -5,7 +5,7 @@ def add_photo(seasons, era, description, scenery, user_id, mime_type, landscape_
     db.execute(sql, [seasons, era, description, scenery, user_id, mime_type, landscape_type_id])
 
 def get_photos():
-    sql = "SELECT id, description FROM photos ORDER BY id DESC"
+    sql = "SELECT photos.id, photos.description, users.id user_id, users.username FROM photos JOIN users ON photos.user_id = users.id ORDER BY photos.id DESC"
     return db.query(sql)
 
 def get_photo(photo_id):

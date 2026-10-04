@@ -19,3 +19,10 @@ CREATE TABLE landscape_types (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE
 );
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY,
+    content TEXT NOT NULL,
+    photo_id INTEGER REFERENCES photos(id),
+    user_id INTEGER REFERENCES users(id)
+);

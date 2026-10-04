@@ -19,6 +19,31 @@
     <p>
         Kuvan lähettäjä on <a href="/user/{{photo.user_id}}">{{photo.username}}</a>
     </p>
+
+    <h2>Kommentit</h2> 
+    {% if comments %} 
+        {% for comment in comments %} 
+            <p> 
+                <strong>{{ comment.username }}</strong>:
+                {{ comment.content }} 
+            </p> {% endfor %} 
+    {% else %} 
+        <p>Ei vielä kommentteja.</p> 
+    {% endif %} 
+    
+    {% if session.user_id %} 
+    <h3>Lisää kommentti</h3> 
+    <form action="/add_comment" method="post"> 
+        <input type="hidden" name="photo_id" value="{{ photo.id }}"> 
+        <p> 
+            <textarea name="content" rows="4" cols="50" required></textarea> 
+        </p> 
+        <p> 
+            <input type="submit" value="Lähetä kommentti"> 
+        </p> 
+    </form> 
+    {% endif %}
+
     <p>
         <a href="/">Takaisin</a>
     </p>

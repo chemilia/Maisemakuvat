@@ -5,6 +5,7 @@ import config
 import db
 import photos
 import users
+import comments
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -33,7 +34,10 @@ def show_photo(photo_id):
     photo = photos.get_photo(photo_id)
     if not photo:
             abort(404)
-    return render_template("show_photo.html", photo = photo)
+
+    comments_list = comments.get_comments(photo_id)
+
+    return render_template("show_photo.html", photo = photo, comments = comments_list)
 
 @app.route("/image/<int:photo_id>")
 def image(photo_id):
@@ -144,6 +148,21 @@ def remove_photo(photo_id):
         else:
             return redirect("/photo/" + str(photo_id))
 
+@app.route("/add_comment", methods=["POST"])
+def add_comment():
+
+    require_login()
+
+    photo_id = request.form["photo_id"]
+    content = request.form["content"]
+
+    comments.add_comment(
+        content,
+        photo_id,
+        session["user_id"]
+    )
+
+    return redirect("/photo/" + str(photo_id))
 
 @app.route("/register")
 def register():

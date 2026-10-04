@@ -10,7 +10,7 @@
   <h2>Kuvat</h2>
   <ul>
     {% for photo in photos %}
-    <li> <a href="/photo/{{photo.id}}"> {{photo.user_username}}: {{photo.description}} </a> </li>
+    <li><a href="/user/{{photo.user_id}}">{{photo.username}}</a>: <a href="/photo/{{photo.id}}">{{photo.description}} </a> </li>
     {% endfor %}
   </ul>
 
