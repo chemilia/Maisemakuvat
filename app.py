@@ -1,10 +1,10 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session, Response, abort
-from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
 import photos
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -43,6 +43,15 @@ def show_photo(photo_id):
 def image(photo_id):
     image = photos.get_image(photo_id)
     return Response(image["scenery"], mimetype=image["mime_type"])
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+            abort(404)
+    photos = users.get_photos(user_id)
+    return render_template("show_user.html", user = user, photos = photos)
+
 
 @app.route("/new_photo")
 def new_photo():
@@ -143,11 +152,9 @@ def create():
     
     if password1 != password2:
         return render_template("register.html",error="VIRHE: salasanat eivät täsmää.")
-    password_hash = generate_password_hash(password1)
-
+    
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.create_user(username,password1)
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
 
@@ -162,22 +169,13 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])
+        user_id = users.check_login(username, password)
 
-        if not result:
-            return render_template("login.html",error="VIRHE: Käyttäjätunnusta ei löydy.")
-
-        user_id = result[0]["id"]
-        password_hash = result[0]["password_hash"]
-
-        if check_password_hash(password_hash, password):
+        if user_id:
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
-        else:
-            return render_template("login.html",error="VIRHE: Käyttäjätunnus tai salasana on väärin.")
-
+        
 @app.route("/logout")
 def logout():
     if "user_id" in session:

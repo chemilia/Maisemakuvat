@@ -3,7 +3,7 @@
 {% block content %}
   {% if session.username %}
   <p>
-    Hei, {{ session.username }}! Tervetuloa maisema-galleriaan!
+    Hei, <a href="/user/{{session.user_id}}">{{ session.username }} </a>! Tervetuloa maisema-galleriaan!
   </p>
   {% endif %}
 
