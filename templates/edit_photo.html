@@ -68,7 +68,47 @@
             </option>
         </select>luku
 
+        <label for="landscape_type">Valitse maisematyyppi:</label>
+
+        <select id="landscape_type" name="landscape_type">
+            <option value="muu"
+                {% if photo.landscape_type == "muu" %}selected{% endif %}>
+                Muu
+            </option>
+
+            <option value="Metsä"
+                {% if photo.landscape_type == "Metsä" %}selected{% endif %}>
+                Metsä
+            </option>
+
+            <option value="Järvi"
+                {% if photo.landscape_type == "Järvi" %}selected{% endif %}>
+                Järvi
+            </option>
+
+            <option value="Kaupunki"
+                {% if photo.landscape_type == "Kaupunki" %}selected{% endif %}>
+                Kaupunki
+            </option>
+
+            <option value="Maaseutu"
+                {% if photo.landscape_type == "Maaseutu" %}selected{% endif %}>
+                Maaseutu
+            </option>
+
+            <option value="Ranta"
+                {% if photo.landscape_type == "Ranta" %}selected{% endif %}>
+                Ranta
+            </option>
+
+            <option value="Vuoristo"
+                {% if photo.landscape_type == "Vuoristo" %}selected{% endif %}>
+                Vuoristo
+            </option>
+        </select>
+
     </p>
+
     <p>
         Kuvaus: <br />
         <textarea name="description" cols = "60" required>{{photo.description}}</textarea>

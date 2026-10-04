@@ -21,16 +21,12 @@ def index():
 @app.route("/find_photo")
 def find_photo():
     query = request.args.get("query")
-    print(query)
-    if query:
-        results = photos.find_photo(query)
+    seasons = request.args.get("seasons", "") 
+    era = request.args.get("era", "") 
+    landscape_type = request.args.get("landscape_type", "")
 
-        if not results:
-            return render_template( "find_photo.html",query=query,results=[],error="Hakusanalla ei löytynyt kuvia. Kokeile toista hakusanaa.")
-    else:
-        query = ""
-        results = []
-    return render_template("find_photo.html", query=query, results = results)
+    results = photos.find_photo( query, seasons, era, landscape_type ) 
+    return render_template( "find_photo.html", query=query, seasons=seasons, era=era, landscape_type=landscape_type, results=results, searched=True )
 
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
@@ -65,16 +61,14 @@ def create_photo():
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
+    landscape_type = request.form["landscape_type"]
 
     image = request.files["scenery"]
     if image.filename == "":
         return "Et valinnut kuvaa"
-
     if image.mimetype not in ["image/png", "image/jpeg"]:
         return render_template("new_photo.html",error="VIRHE: kuvan pitää olla PNG- tai JPG-kuva")
-
     scenery = image.read()
-
     if len(scenery) > 5* 1024 * 1024:
         return render_template("new_photo.html",error="VIRHE: kuvan maksimikoko on 5 MB")
         
@@ -82,7 +76,13 @@ def create_photo():
 
     user_id = session["user_id"]
 
-    photos.add_photo(seasons, era, description, scenery, user_id, mime_type)
+    result = db.query(
+        "SELECT id FROM landscape_types WHERE name = ?",
+        [landscape_type]
+    )
+    landscape_type_id = result[0]["id"]
+
+    photos.add_photo(seasons, era, description, scenery, user_id, mime_type, landscape_type_id)
 
     return redirect("/")
 
@@ -107,12 +107,21 @@ def update_photo():
             abort(404)
     if photo["user_id"] != session["user_id"]:
         abort(403)
+
     seasons = request.form["seasons"]
     era = request.form["era"]
     description = request.form["description"]
+    landscape_type = request.form["landscape_type"]
+
     #scenery = request.files["scenery"].read()
 
-    photos.update_photo(photo_id, seasons, era, description)
+    result = db.query(
+            "SELECT id FROM landscape_types WHERE name = ?",
+            [landscape_type]
+        )
+    landscape_type_id = result[0]["id"]
+
+    photos.update_photo(photo_id, seasons, era, description, landscape_type_id)
     return redirect("/photo/" + str(photo_id))
 
 @app.route("/remove_photo/<int:photo_id>" , methods=["GET", "POST"])

@@ -6,28 +6,63 @@
 
     <form action="/find_photo" method="get">
         <p>
-            Hakusana: <input type="text" name="query" value="{{ query }}" required>
+            Hakusana: <input type="text" name="query" value="{{ query }}">
         </p>
+
+        <p> Vuodenaika:
+            <select name="seasons"> 
+                <option value="">Kaikki</option> 
+                <option value="Kevät" {% if seasons == "Kevät" %}selected{% endif %}> Kevät </option> 
+                <option value="Kesä" {% if seasons == "Kesä" %}selected{% endif %}> Kesä </option> 
+                <option value="Syksy" {% if seasons == "Syksy" %}selected{% endif %}> Syksy </option> 
+                <option value="Talvi" {% if seasons == "Talvi" %}selected{% endif %}> Talvi </option> 
+            </select> 
+            Vuosikymmen: 
+            <select name="era"> 
+                <option value="">Kaikki</option> 
+                <option value="2020" {% if era == "2020" %}selected{% endif %}> 2020-luku </option> 
+                <option value="2010" {% if era == "2010" %}selected{% endif %}> 2010-luku </option> 
+                <option value="2000" {% if era == "2000" %}selected{% endif %}> 2000-luku </option> 
+                <option value="1990" {% if era == "1990" %}selected{% endif %}> 1990-luku </option> 
+                <option value="1980" {% if era == "1980" %}selected{% endif %}> 1980-luku </option> 
+                <option value="1970" {% if era == "1970" %}selected{% endif %}> 1970-luku </option> 
+                <option value="1960" {% if era == "1960" %}selected{% endif %}> 1960-luku </option> 
+            </select>  
+            Maisematyyppi: 
+            <select name="landscape_type"> 
+                <option value="">Kaikki</option> 
+                <option value="muu" {% if landscape_type == "muu" %}selected{% endif %}> Muu </option> 
+                <option value="Metsä" {% if landscape_type == "Metsä" %}selected{% endif %}> Metsä </option> 
+                <option value="Järvi" {% if landscape_type == "Järvi" %}selected{% endif %}> Järvi </option> 
+                <option value="Kaupunki" {% if landscape_type == "Kaupunki" %}selected{% endif %}> Kaupunki </option> 
+                <option value="Maaseutu" {% if landscape_type == "Maaseutu" %}selected{% endif %}> Maaseutu </option> 
+                <option value="Ranta" {% if landscape_type == "Ranta" %}selected{% endif %}> Ranta </option> 
+                <option value="Vuoristo" {% if landscape_type == "Vuoristo" %}selected{% endif %}> Vuoristo </option> 
+            </select> 
+        </p> 
         <input type="submit" value="Lähetä">
     </form>
 
-    {% if error %}
-    <p>{{ error }}</p>
+    {% if searched %}
 
-    {% else %}
-    
-        {% if query %}
-        <h2>Tulokset</h2>
-        <ul>
-            {% for photo in results %}
-            <li> <a href="/photo/{{photo.id}}"> {{photo.description}}</a> </li>
-            {% endfor %}
-        </ul>
+    <h2>Tulokset</h2>
+
+        {% if results %}
+
+            <ul>
+                {% for photo in results %}
+                    <li>
+                        <a href="/photo/{{ photo.id }}">
+                            {{ photo.description }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
 
         {% else %}
 
-        <p>Ei löytynyt kuvia kyseisellä hakusanalla.</p>
-        
+            <p>Ei löytynyt kuvia näillä hakuehdoilla.</p>
+
         {% endif %}
     {% endif %}
 
