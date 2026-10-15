@@ -39,3 +39,18 @@ body {
   background-color: rgb(111, 173, 136);
   color: white;
 }
+
+.like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1.5em;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.like-button:hover{
+    background: none;
+    transform: scale(1.15);
+}

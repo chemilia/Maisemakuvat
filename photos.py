@@ -5,7 +5,13 @@ def add_photo(seasons, era, description, scenery, user_id, mime_type, landscape_
     db.execute(sql, [seasons, era, description, scenery, user_id, mime_type, landscape_type_id])
 
 def get_photos():
-    sql = "SELECT photos.id, photos.description, users.id user_id, users.username FROM photos JOIN users ON photos.user_id = users.id ORDER BY photos.id DESC"
+    sql = """SELECT photos.id, 
+                    photos.description, 
+                    users.id user_id, 
+                    users.username,
+                    (SELECT COUNT(*) FROM likes WHERE likes.photo_id = photos.id) AS like_count
+                FROM photos JOIN users ON photos.user_id = users.id 
+                ORDER BY photos.id DESC"""
     return db.query(sql)
 
 def get_photo(photo_id):
@@ -36,6 +42,12 @@ def update_photo(photo_id, seasons,era, description, landscape_type_id):
     db.execute(sql, [seasons, era, description, landscape_type_id, photo_id])
 
 def remove_photo(photo_id):
+    sql = "DELETE FROM likes WHERE photo_id = ?"
+    db.execute(sql, [photo_id])
+
+    sql = "DELETE FROM comments WHERE photo_id = ?"
+    db.execute(sql, [photo_id])
+
     sql = "DELETE FROM photos WHERE id = ?"
     db.execute(sql, [photo_id])
 

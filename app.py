@@ -3,13 +3,16 @@ import sqlite3
 from flask import Flask
 from flask import redirect, render_template, flash, request, session, Response, abort
 import config
+import markupsafe
 import db
 import photos
 import users
 import comments
+import likes
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+app.jinja_env.globals["likes"] = likes
 
 def require_login():
     if "user_id" not in session:
@@ -21,6 +24,12 @@ def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
+
 @app.route("/")
 def index():
     all_photos = photos.get_photos()
@@ -29,8 +38,8 @@ def index():
 @app.route("/find_photo")
 def find_photo():
     query = request.args.get("query")
-    seasons = request.args.get("seasons", "") 
-    era = request.args.get("era", "") 
+    seasons = request.args.get("seasons", "")
+    era = request.args.get("era", "")
     landscape_type = request.args.get("landscape_type", "")
 
     results = photos.find_photo( query, seasons, era, landscape_type)
@@ -56,8 +65,8 @@ def image(photo_id):
 def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
-            flash("Käyttäjää ei löytynyt.")
-            return redirect("/")
+        flash("Käyttäjää ei löytynyt.")
+        return redirect("/")
     photos = users.get_photos(user_id)
     return render_template("show_user.html", user = user, photos = photos)
 
@@ -156,7 +165,7 @@ def remove_photo(photo_id):
 
     photo = photos.get_photo(photo_id)
     if not photo:
-        flash("Kuva on jo poistettu.")
+        flash("Kuvaa ei löytynyt.")
         return redirect("/")
 
     if photo["user_id"] != session["user_id"]:
@@ -188,6 +197,27 @@ def add_comment():
         photo_id,
         session["user_id"]
     )
+
+    return redirect("/photo/" + str(photo_id))
+
+@app.route("/like", methods=["POST"])
+def like():
+    require_login()
+    check_csrf()
+
+    photo_id = request.form["photo_id"]
+    photo = photos.get_photo(photo_id)
+
+    if not photo:
+        flash("Kuvaa ei löytynyt.")
+        return redirect("/")
+
+    user_id = session["user_id"]
+
+    if likes.has_liked(user_id, photo_id):
+        likes.remove_like(user_id, photo_id)
+    else:
+        likes.add_like(user_id, photo_id)
 
     return redirect("/photo/" + str(photo_id))
 
@@ -226,7 +256,6 @@ def login():
         return render_template("login.html")
 
     if request.method == "POST":
-        check_csrf()
 
         username = request.form["username"]
         password = request.form["password"]

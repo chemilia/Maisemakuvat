@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{photo.description}}</h1>
+    <h1>{{ photo.description }}</h1>
     {% if session.user_id ==  photo.user_id %}
     <p>
         <a href="/edit_photo/{{photo.id}}">Muokkaa kuvan tiedot</a>
@@ -20,6 +20,20 @@
     <p>
         Kuvan lähettäjä on <a href="/user/{{photo.user_id}}">{{photo.username}}</a>
     </p>
+    </div>
+
+    <div class="likes">
+        <form action="/like" method="post">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="photo_id" value="{{photo.id}}">
+            <button type="submit" class = "like-button">
+                {% if session.get("user_id") and likes.has_liked(session["user_id"], photo.id) %}
+                ❤️ 
+                {% else %}
+                🤍 
+                {% endif %}
+            </button>
+        </form>
     </div>
 
     <h2>Kommentit</h2> 
@@ -44,7 +58,7 @@
             <textarea name="content" rows="4" cols="50" required></textarea> 
         </p> 
         <p> 
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <input type="submit" value="Lähetä kommentti"> 
         </p> 
     </form> 

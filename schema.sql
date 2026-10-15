@@ -36,3 +36,10 @@ CREATE TABLE comments (
     photo_id INTEGER REFERENCES photos(id),
     user_id INTEGER REFERENCES users(id)
 );
+
+CREATE TABLE likes (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    photo_id INTEGER REFERENCES photos(id),
+    UNIQUE (user_id, photo_id)
+);

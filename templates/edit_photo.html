@@ -4,6 +4,8 @@
 
      <h1>Kuvan tiedon muokkaaminen</h1>
   <form action="/update_photo" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+
     <p>
       <label for="seasons">Valitse vuodenaika:</label>
 
@@ -115,7 +117,6 @@
     </p>
 
     <input type="hidden" name="photo_id" value="{{photo.id}}" />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Päivitä tiedot" />
   </form>
 

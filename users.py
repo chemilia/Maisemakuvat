@@ -9,7 +9,10 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_photos(user_id):
-    sql = """SELECT id, description FROM photos WHERE user_id = ? ORDER BY id DESC"""
+    sql = """SELECT id, 
+                    description,
+                    (SELECT COUNT(*)FROM likes WHERE likes.photo_id == photos.id) AS like_count 
+                FROM photos WHERE user_id = ? ORDER BY id DESC"""
     return db.query(sql, [user_id])
 
 def create_user(username,password):

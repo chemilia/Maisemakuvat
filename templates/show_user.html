@@ -9,7 +9,8 @@
   <h2>Kuvat</h2>
   {% for photo in photos %}
   <div class="photo">
-  <a href="/photo/{{photo.id}}">{{photo.description}} </a>
+  <a href="/photo/{{photo.id}}">{{photo.description}} </a> <br />
+  ❤️ {{ photo.like_count }} tykkäystä
   </div>
   {% endfor %}
 {% endblock %}
