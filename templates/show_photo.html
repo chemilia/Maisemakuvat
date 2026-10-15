@@ -12,6 +12,7 @@
     <p>
         <img src="/image/{{photo.id}}">
     </p>
+    <div class="photo_info">
     <p> 
         Kuva on otettu: {{photo.seasons}}, {{photo.era}} luvulla
         maisematyyppi on {{photo.landscape_type}}
@@ -19,18 +20,22 @@
     <p>
         Kuvan lähettäjä on <a href="/user/{{photo.user_id}}">{{photo.username}}</a>
     </p>
+    </div>
 
     <h2>Kommentit</h2> 
+    <div class="comments">
     {% if comments %} 
         {% for comment in comments %} 
+            <div class="comment">
             <p> 
                 <strong>{{ comment.username }}</strong>:
                 {{ comment.content }} 
-            </p> {% endfor %} 
+            </p> </div>{% endfor %} 
     {% else %} 
         <p>Ei vielä kommentteja.</p> 
     {% endif %} 
-    
+    </div>
+
     {% if session.user_id %} 
     <h3>Lisää kommentti</h3> 
     <form action="/add_comment" method="post"> 
@@ -42,11 +47,6 @@
             <input type="submit" value="Lähetä kommentti"> 
         </p> 
     </form> 
-    {% endif %}
-
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
-    
+    {% endif %} 
 
 {% endblock %}

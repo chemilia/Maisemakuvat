@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session, Response, abort
+from flask import redirect, render_template, flash, request, session, Response, abort
 import config
 import db
 import photos
@@ -26,14 +26,15 @@ def find_photo():
     era = request.args.get("era", "") 
     landscape_type = request.args.get("landscape_type", "")
 
-    results = photos.find_photo( query, seasons, era, landscape_type ) 
+    results = photos.find_photo( query, seasons, era, landscape_type)
     return render_template( "find_photo.html", query=query, seasons=seasons, era=era, landscape_type=landscape_type, results=results, searched=True )
 
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
     photo = photos.get_photo(photo_id)
     if not photo:
-            abort(404)
+        flash("Kuva on poistettu pois, voit katso muita kuvia.")
+        return redirect("/")
 
     comments_list = comments.get_comments(photo_id)
 
@@ -48,7 +49,8 @@ def image(photo_id):
 def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
-            abort(404)
+            flash("Käyttäjää ei löytynyt.")
+            return redirect("/")
     photos = users.get_photos(user_id)
     return render_template("show_user.html", user = user, photos = photos)
 
@@ -69,12 +71,17 @@ def create_photo():
 
     image = request.files["scenery"]
     if image.filename == "":
-        return "Et valinnut kuvaa"
+        flash("Et valinnut kuvaa")
+        return redirect("/new_photo")
     if image.mimetype not in ["image/png", "image/jpeg"]:
-        return render_template("new_photo.html",error="VIRHE: kuvan pitää olla PNG- tai JPG-kuva")
+        flash("VIRHE: kuvan pitää olla PNG- tai JPG-kuva")
+        return redirect("/new_photo")
+
     scenery = image.read()
     if len(scenery) > 5* 1024 * 1024:
-        return render_template("new_photo.html",error="VIRHE: kuvan maksimikoko on 5 MB")
+        flash("VIRHE: kuvan maksimikoko on 5 MB")
+        return redirect("/new_photo")
+
         
     mime_type = image.mimetype
 
@@ -97,9 +104,12 @@ def edit_photo(photo_id):
 
     photo = photos.get_photo(photo_id)
     if not photo:
-            abort(404)
+            flash("Kuvaa ei löytynyt")
+            return redirect("/")
     if photo["user_id"] != session["user_id"]:
-        abort(403)
+        flash("Et voi muokata tämä kuvaa, koska et ole kuvan lähettäjä.")
+        return redirect("/photo/" + str(photo_id))
+
     return render_template("edit_photo.html", photo = photo)
 
 @app.route("/update_photo", methods=["POST"])
@@ -109,9 +119,11 @@ def update_photo():
     photo_id = request.form["photo_id"]
     photo = photos.get_photo(photo_id)
     if not photo:
-            abort(404)
+        flash("Kuvaa ei löytynyt")
+        return redirect("/")
     if photo["user_id"] != session["user_id"]:
-        abort(403)
+        flash("Et voi muokata tämä kuvaa, koska et ole kuvan lähettäjä.")
+        return redirect("/photo/" + str(photo_id))
 
     seasons = request.form["seasons"]
     era = request.form["era"]
@@ -135,9 +147,12 @@ def remove_photo(photo_id):
 
     photo = photos.get_photo(photo_id)
     if not photo:
-            abort(404)
+        flash("Kuva on jo poistettu.")
+        return redirect("/")
+
     if photo["user_id"] != session["user_id"]:
-        abort(403)
+        flash("Et voi poistaa kuvan, koska et ole kuvan lähettäjä")
+        return redirect("/photo/"+ str(photo_id))
 
     if request.method =="GET":
         return render_template("remove_photo.html", photo = photo)
@@ -175,19 +190,22 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if not username:
-        return render_template("register.html",error="VIRHE: Anna käyttäjätunnus.")
+        flash("VIRHE: Anna käyttäjätunnus.")
+        return redirect("/register")
     if not password1:
-        return render_template("register.html",error="VIRHE: Anna salasana.")
-    
+        flash("VIRHE: Anna salasana.")
+        return redirect("/register")
     if password1 != password2:
-        return render_template("register.html",error="VIRHE: salasanat eivät täsmää.")
+        flash("VIRHE: salasanat eivät täsmää.")
+        return redirect("/register")
     
     try:
         users.create_user(username,password1)
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
-
-    return "Tunnus luotu"
+        flash("VIRHE: tunnus on jo varattu")
+        return redirect("/register")
+    flash("Tunnus luotu, nyt voit kirjautua sisään.")
+    return redirect("/")
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -203,7 +221,10 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            flash("Olet kirjautunut onnistuneesti sisään.")
             return redirect("/")
+        else:
+            return redirect("/login")
         
 @app.route("/logout")
 def logout():

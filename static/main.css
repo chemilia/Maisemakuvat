@@ -8,5 +8,34 @@ body {
 .photo{
     border: 2px solid whitesmoke;
   margin: 1em;
-  padding: 0.2em 0.5em;
+  padding: 0.5em 0.8em;
+}
+
+.photo_info{
+    font-size: 0.85em;
+    color: gray
+}
+
+.comments{
+    margin-top: 15px;
+}
+
+.comment{
+    padding: 10px 15px;
+    margin-left: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.comment p{
+    margin: 5px 0 0;
+    font-size: 0.95em;
+    overflow-wrap: anywhere;
+}
+
+.info {
+  border: 1px solid rgb(74, 97, 78);
+  margin: 1em;
+  padding: 0.5em;
+  background-color: rgb(111, 173, 136);
+  color: white;
 }

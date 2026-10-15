@@ -1,5 +1,5 @@
 import db
-from flask import render_template
+from flask import flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -22,8 +22,8 @@ def check_login(username, password):
     result = db.query(sql, [username])
     
     if not result:
+        flash("VIRHE: Käyttäjätunnusta ei löydy.")
         return None
-    #render_template("login.html",error="VIRHE: Käyttäjätunnusta ei löydy.")
     
     user_id = result[0]["id"]
     password_hash = result[0]["password_hash"]
@@ -31,6 +31,6 @@ def check_login(username, password):
     if check_password_hash(password_hash, password):
         return user_id
     else:
+        flash("VIRHE: Käyttäjätunnus tai salasana on väärin.")
         return None
-        return render_template("login.html",error="VIRHE: Käyttäjätunnus tai salasana on väärin.")
     
