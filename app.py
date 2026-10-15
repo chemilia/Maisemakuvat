@@ -88,7 +88,8 @@ def create_photo():
 
     photos.add_photo(seasons, era, description, scenery, user_id, mime_type, landscape_type_id)
 
-    return redirect("/")
+    photo_id = db.last_insert_id()
+    return redirect("/photo/" + str(photo_id))
 
 @app.route("/edit_photo/<int:photo_id>")
 def edit_photo(photo_id):
