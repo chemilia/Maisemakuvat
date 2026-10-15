@@ -3,18 +3,13 @@
 {% block content %}
     <h1>{{user.username}} </h1>
     <p>
-        Käyttäjä on lähettännyt {{ photos | count}} kuvaa.
+      Käyttäjä on lähettännyt {{ photos | count}} kuvaa.
     </p>
 
-    <h2>Kuvat</h2>
-  <ul>
-    {% for photo in photos %}
-    <li> <a href="/photo/{{photo.id}}"> {{photo.description}} </a> </li>
-    {% endfor %}
-  </ul>
-
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
-
+  <h2>Kuvat</h2>
+  {% for photo in photos %}
+  <div class="photo">
+  <a href="/photo/{{photo.id}}">{{photo.description}} </a>
+  </div>
+  {% endfor %}
 {% endblock %}
