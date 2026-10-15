@@ -44,6 +44,7 @@
             <textarea name="content" rows="4" cols="50" required></textarea> 
         </p> 
         <p> 
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
             <input type="submit" value="Lähetä kommentti"> 
         </p> 
     </form> 

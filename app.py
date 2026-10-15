@@ -1,3 +1,4 @@
+import secrets
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, flash, request, session, Response, abort
@@ -12,6 +13,12 @@ app.secret_key = config.secret_key
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if "csrf_token" not in session:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -63,6 +70,7 @@ def new_photo():
 @app.route("/create_photo", methods=["POST"])
 def create_photo():
     require_login()
+    check_csrf()
 
     seasons = request.form["seasons"]
     era = request.form["era"]
@@ -115,6 +123,7 @@ def edit_photo(photo_id):
 @app.route("/update_photo", methods=["POST"])
 def update_photo():
     require_login()
+    check_csrf()
 
     photo_id = request.form["photo_id"]
     photo = photos.get_photo(photo_id)
@@ -158,6 +167,8 @@ def remove_photo(photo_id):
         return render_template("remove_photo.html", photo = photo)
 
     if request.method == "POST":
+        check_csrf()
+
         if "remove" in request.form:
             photos.remove_photo(photo_id)
             return redirect("/")
@@ -166,8 +177,8 @@ def remove_photo(photo_id):
 
 @app.route("/add_comment", methods=["POST"])
 def add_comment():
-
     require_login()
+    check_csrf()
 
     photo_id = request.form["photo_id"]
     content = request.form["content"]
@@ -186,6 +197,7 @@ def register():
 
 @app.route("/create", methods=["POST"])
 def create():
+
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -209,10 +221,13 @@ def create():
 
 @app.route("/login", methods=["GET","POST"])
 def login():
+    
     if request.method == "GET":
         return render_template("login.html")
 
-    if request.method == "POST":    
+    if request.method == "POST":
+        check_csrf()
+
         username = request.form["username"]
         password = request.form["password"]
 
@@ -221,6 +236,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             flash("Olet kirjautunut onnistuneesti sisään.")
             return redirect("/")
         else:

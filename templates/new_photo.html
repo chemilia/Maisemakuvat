@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-     <h1>Lisää uusi kuva</h1>
+  <h1>Lisää uusi kuva</h1>
   <form action="/create_photo" method="post" enctype="multipart/form-data">
     <p>
       Valitse kuva:
@@ -16,47 +16,47 @@
       <label for="seasons">Valitse vuodenaika:</label> 
 
         <select id="seasons" name="seasons">
-            <option value="Kevät">Kevät</option>
-            <option value="Kesä">Kesä</option>
-            <option value="Syksy">Syksy</option>
-            <option value="Talvi">talvi</option>
+          <option value="Kevät">Kevät</option>
+          <option value="Kesä">Kesä</option>
+          <option value="Syksy">Syksy</option>
+          <option value="Talvi">talvi</option>
         </select><br />
 
       <label for="era">Valitse aikakausi:</label> 
 
         <select id="era" name="era">
-            <option value="2020">2020</option>
-            <option value="2010">2010</option>
-            <option value="2000">2000</option> 
-            <option value="1990">1990</option>
-            <option value="1980">1980</option>
-            <option value="1970">1970</option>
-            <option value="1960">1960</option>           
+          <option value="2020">2020</option>
+          <option value="2010">2010</option>
+          <option value="2000">2000</option> 
+          <option value="1990">1990</option>
+          <option value="1980">1980</option>
+          <option value="1970">1970</option>
+          <option value="1960">1960</option>           
         </select>luku<br />
 
       <label for="landscape_type">Valitse maisematyyppi:</label> 
 
         <select id="landscape_type" name="landscape_type">
-            <option value="Muu">Muu</option>
-            <option value="Metsä">Metsä</option>
-            <option value="Järvi">Järvi</option>
-            <option value="Kaupunki">Kaupunki</option>
-            <option value="Maaseutu">Maaseutu</option>
-            <option value="Ranta">Ranta</option>
-            <option value="Vuoristo">Vuoristo</option>
+          <option value="Muu">Muu</option>
+          <option value="Metsä">Metsä</option>
+          <option value="Järvi">Järvi</option>
+          <option value="Kaupunki">Kaupunki</option>
+          <option value="Maaseutu">Maaseutu</option>
+          <option value="Ranta">Ranta</option>
+          <option value="Vuoristo">Vuoristo</option>
 
-          </select><br />
-
+        </select>
     </p>
     
     <p>
-        Kuvan otsikko: <br />
-        <textarea name="description" cols = "60" required maxlength = "200"></textarea><br />
-        <div class="photo_info">
-        * Voit kuvailla vähän kuvaasi ja houkutella muita käyttäjiä tule katsomaan kuvaasi. 
-        </div>
+      Kuvan otsikko: <br />
+      <textarea name="description" cols = "60" required maxlength = "200"></textarea><br />
+      <div class="photo_info">
+      * Voit kuvailla vähän kuvaasi ja houkutella muita käyttäjiä tule katsomaan kuvaasi. 
+      </div>
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </p>
-  
+
     <input type="submit" value="Lähetä kuva" />
   </form>
 

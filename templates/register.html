@@ -2,9 +2,6 @@
 
 {% block content %}
   <form action="/create" method="post">
-    {% if error %}
-    <p style="color:red">{{ error }}</p>
-    {% endif %}
     <p>
       Tunnus: <br />
       <input type="text" name="username" maxlength="20"/>
@@ -17,6 +14,7 @@
       Salasana uudestaan: <br />
       <input type="password" name="password2" maxlength="30"/>
     </p>
+
     <input type="submit" value="Luo tunnus" />
   </form>
 
