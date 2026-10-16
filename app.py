@@ -48,6 +48,7 @@ def find_photo():
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
     photo = photos.get_photo(photo_id)
+
     if not photo:
         flash("Kuva on poistettu pois, voit katso muita kuvia.")
         return redirect("/")

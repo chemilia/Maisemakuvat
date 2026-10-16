@@ -23,8 +23,8 @@ def get_photo(photo_id):
                     photos.landscape_type_id,
                     landscape_types.name landscape_type,
                     users.id user_id,
-                    users.username
-
+                    users.username,
+                    (SELECT COUNT(*) FROM likes WHERE likes.photo_id = photos.id) AS like_count
                 FROM photos
                 JOIN users ON photos.user_id = users.id
                 LEFT JOIN landscape_types ON photos.landscape_type_id = landscape_types.id
