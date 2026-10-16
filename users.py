@@ -1,7 +1,6 @@
-import db
 from flask import flash
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import db
 
 def get_user(user_id):
     sql = """SELECT id, username FROM users WHERE id = ?"""
@@ -9,7 +8,7 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_photos(user_id):
-    sql = """SELECT id, 
+    sql = """SELECT id,
                     description,
                     (SELECT COUNT(*)FROM likes WHERE likes.photo_id == photos.id) AS like_count 
                 FROM photos WHERE user_id = ? ORDER BY id DESC"""
@@ -23,11 +22,11 @@ def create_user(username,password):
 def check_login(username, password):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
-    
+
     if not result:
         flash("VIRHE: Käyttäjätunnusta ei löydy.")
         return None
-    
+
     user_id = result[0]["id"]
     password_hash = result[0]["password_hash"]
 
@@ -36,4 +35,3 @@ def check_login(username, password):
     else:
         flash("VIRHE: Käyttäjätunnus tai salasana on väärin.")
         return None
-    

@@ -1,16 +1,23 @@
 import db
 
 def add_photo(seasons, era, description, scenery, user_id, mime_type, landscape_type_id):
-    sql = "INSERT INTO photos (seasons, era, description, scenery, user_id, mime_type, landscape_type_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    sql = """INSERT INTO photos (seasons,
+                                era,
+                                description,
+                                scenery,
+                                user_id,
+                                mime_type,
+                                landscape_type_id)
+                                VALUES (?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [seasons, era, description, scenery, user_id, mime_type, landscape_type_id])
 
 def get_photos():
-    sql = """SELECT photos.id, 
-                    photos.description, 
-                    users.id user_id, 
+    sql = """SELECT photos.id,
+                    photos.description,
+                    users.id user_id,
                     users.username,
                     (SELECT COUNT(*) FROM likes WHERE likes.photo_id = photos.id) AS like_count
-                FROM photos JOIN users ON photos.user_id = users.id 
+                FROM photos JOIN users ON photos.user_id = users.id
                 ORDER BY photos.id DESC"""
     return db.query(sql)
 

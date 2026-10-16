@@ -45,7 +45,13 @@ def find_photo():
     landscape_type = request.args.get("landscape_type", "")
 
     results = photos.find_photo( query, seasons, era, landscape_type)
-    return render_template( "find_photo.html", query=query, seasons=seasons, era=era, landscape_type=landscape_type, results=results, searched=True )
+    return render_template( "find_photo.html",
+                           query=query,
+                           seasons=seasons,
+                           era=era,
+                           landscape_type=landscape_type,
+                           results=results,
+                           searched=True )
 
 @app.route("/photo/<int:photo_id>")
 def show_photo(photo_id):
@@ -61,8 +67,8 @@ def show_photo(photo_id):
 
 @app.route("/image/<int:photo_id>")
 def image(photo_id):
-    image = photos.get_image(photo_id)
-    return Response(image["scenery"], mimetype=image["mime_type"])
+    photo_image = photos.get_image(photo_id)
+    return Response(photo_image["scenery"], mimetype=photo_image["mime_type"])
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -70,8 +76,8 @@ def show_user(user_id):
     if not user:
         flash("Käyttäjää ei löytynyt.")
         return redirect("/")
-    photos = users.get_photos(user_id)
-    return render_template("show_user.html", user = user, photos = photos)
+    user_photos = users.get_photos(user_id)
+    return render_template("show_user.html", user = user, photos = user_photos)
 
 
 @app.route("/new_photo")
@@ -89,21 +95,21 @@ def create_photo():
     description = request.form["description"]
     landscape_type = request.form["landscape_type"]
 
-    image = request.files["scenery"]
-    if image.filename == "":
+    new_image = request.files["scenery"]
+    if new_image.filename == "":
         flash("Et valinnut kuvaa")
         return redirect("/new_photo")
-    if image.mimetype not in ["image/png", "image/jpeg"]:
+    if new_image.mimetype not in ["image/png", "image/jpeg"]:
         flash("VIRHE: kuvan pitää olla PNG- tai JPG-kuva")
         return redirect("/new_photo")
 
-    scenery = image.read()
+    scenery = new_image.read()
     if len(scenery) > 5* 1024 * 1024:
         flash("VIRHE: kuvan maksimikoko on 5 MB")
         return redirect("/new_photo")
 
-        
-    mime_type = image.mimetype
+
+    mime_type = new_image.mimetype
 
     user_id = session["user_id"]
 
@@ -124,8 +130,8 @@ def edit_photo(photo_id):
 
     photo = photos.get_photo(photo_id)
     if not photo:
-            flash("Kuvaa ei löytynyt")
-            return redirect("/")
+        flash("Kuvaa ei löytynyt")
+        return redirect("/")
     if photo["user_id"] != session["user_id"]:
         flash("Et voi muokata tämä kuvaa, koska et ole kuvan lähettäjä.")
         return redirect("/photo/" + str(photo_id))
@@ -243,7 +249,7 @@ def create():
     if password1 != password2:
         flash("VIRHE: salasanat eivät täsmää.")
         return redirect("/register")
-    
+
     try:
         users.create_user(username,password1)
     except sqlite3.IntegrityError:
@@ -254,7 +260,7 @@ def create():
 
 @app.route("/login", methods=["GET","POST"])
 def login():
-    
+
     if request.method == "GET":
         return render_template("login.html")
 
@@ -273,7 +279,7 @@ def login():
             return redirect("/")
         else:
             return redirect("/login")
-        
+
 @app.route("/logout")
 def logout():
     if "user_id" in session:
