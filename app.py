@@ -1,9 +1,11 @@
 import secrets
 import sqlite3
+
 from flask import Flask
 from flask import redirect, render_template, flash, request, session, Response, abort
-import config
 import markupsafe
+
+import config
 import db
 import photos
 import users
